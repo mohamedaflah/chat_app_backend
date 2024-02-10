@@ -61,13 +61,17 @@ export const loginController = async (req: Request, res: Response) => {
     if (!passwordComparison) {
       throw new Error("Incorrect email or password");
     }
-    const token = jwt.sign({ username: userData.username, email: userData.email, id: userData._id }, process.env.JWT_SECRET ?? "He", {
-      expiresIn: "48h",
-    });
+    const token = jwt.sign(
+      { username: userData.username, email: userData.email, id: userData._id },
+      process.env.JWT_SECRET ?? "He",
+      {
+        expiresIn: "48h",
+      }
+    );
     console.log(token);
 
     res.cookie("token", token, { httpOnly: true, maxAge: 1.728e8 });
-    res.json({ status: true, message: "Successfully logined",user:userData });
+    res.json({ status: true, message: "Successfully logined", user: userData });
   } catch (error: any) {
     console.log(error.message);
     res.status(400).json({ status: false, err: error.message });
@@ -76,28 +80,42 @@ export const loginController = async (req: Request, res: Response) => {
 export const logoutController = async (req: Request, res: Response) => {
   try {
     res.clearCookie("token");
-    res.json({ status: true, message: "Logout Successfull!!",user:null });
+    res.json({ status: true, message: "Logout Successfull!!", user: null });
   } catch (error: any) {
-    res.status(400).json({ status: false, err: error.message,user:null });
+    res.status(400).json({ status: false, err: error.message, user: null });
     console.log(error);
   }
 };
-export const checkAuthController=async(req:Request,res:Response)=>{
+export const checkAuthController = async (req: Request, res: Response) => {
   try {
-    const token=req.cookies.token
-    if(token){
-      jwt.verify(token,process.env.JWT_SECRET ?? "He",async(err:any,decoded:any)=>{
-        if(err){
-          throw err
+    const token = req.cookies.token;
+    if (token) {
+      jwt.verify(
+        token,
+        process.env.JWT_SECRET ?? "He",
+        async (err: any, decoded: any) => {
+          if (err) {
+            throw err;
+          }
+          console.log(decoded);
+          const user = await UserModal.findById(decoded.id);
+          res.status(200).json({ status: true, message: "Successful", user });
         }
-        console.log(decoded);
-        const user=await UserModal.findById(decoded.id)
-        res.status(200).json({status: true, message: "Successful",user})
-      })
-    }else{
-      throw new Error('Your session cleared')
+      );
+    } else {
+      throw new Error("Your session cleared");
     }
-  } catch (error:any) {
-    res.status(400).json({status:false,err:error.message,user:null})
+  } catch (error: any) {
+    res.status(400).json({ status: false, err: error.message, user: null });
   }
-}
+};
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const myId=req.query.id
+    const users = await UserModal.find({ _id: { $ne: myId } });
+
+    res.status(200).json({status:true,users})
+  } catch (error: Error | any) {
+    res.status(400).json({ status: true, err: error.message, users: false });
+  }
+};

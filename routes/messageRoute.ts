@@ -1,6 +1,6 @@
 import express from 'express'
-import { addMessageController, getMessageController } from '../controllers/messageController'
-const messageRouter=express.Router()
+import { createMessages, getMessages } from '../controllers/messageController'
+export const messageRouter=express.Router()
 
-messageRouter.post('/add-message',addMessageController)
-messageRouter.post('/get-message',getMessageController)
+messageRouter.post('/create-message',createMessages)
+messageRouter.get('/get-message/:chatId',getMessages)

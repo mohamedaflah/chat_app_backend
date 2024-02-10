@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     profile: {
       type: String,
+      default:"https://github.com/shadcn.png"
     },
     joinedDate: {
       type: Date,
