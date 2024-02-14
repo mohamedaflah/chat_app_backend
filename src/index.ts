@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin:"*"
+    origin:"https://realtime-chat-frontend-ywzp.vercel.app"
   })
 );
 app.use("/", router);
