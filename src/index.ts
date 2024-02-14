@@ -25,7 +25,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -121,5 +120,4 @@ io.on("connection", (socket) => {
       }
     }
   );
-
 });
