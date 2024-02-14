@@ -29,13 +29,14 @@ export const createMessages = async (req: Request, res: Response) => {
 // _______________________________________________
 // getMessages
 // _______________________________________________
+
 export const getMessages =async (req: Request, res: Response) => {
   try {
     const {chatId}=req.params
     
     
     const messages=await MessageModel.find({chatId:new ObjectId(chatId)})
-    res.status(200).json({status:true,messages})
+    res.status(200).json({status:true,messages,chatId})
     
   } catch (error: any | Error) {
     console.log(error)
