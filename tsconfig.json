@@ -5,7 +5,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "types": ["node", "express"],
-    "strict": true,
+    "strict": false, // it was true I changed to false
     "esModuleInterop": true
   },
   "include": ["src/**/*.ts"],

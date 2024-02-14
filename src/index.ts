@@ -6,7 +6,7 @@ import router from "./routes/userRoute";
 import { Socket } from "socket.io";
 import { chatRouter } from "./routes/chatRoutes";
 import { messageRouter } from "./routes/messageRoute";
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { chatType } from "./types/UserModelType";
 
 const socket = require("socket.io");
@@ -34,7 +34,6 @@ app.use("/chat", chatRouter);
 app.use("/messages", messageRouter);
 const server = app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`);
-  
 });
 
 const io: Socket = socket(server, {
@@ -78,16 +77,16 @@ io.on("connection", (socket) => {
     const user = onlineUsersList.find(
       (user) => user.userId === data.recipienId
     );
-    const Id=uuidv4()
-    const sendingData:chatType={
-      _id:Id,
-      chatId:data.chatId,
-      content:data.message,
-      senderId:data.senderId,
-      createdAt:new Date(),
-      updatedAt:new Date(),
-      date:new Date()
-    }
+    const Id = uuidv4();
+    const sendingData: chatType = {
+      _id: Id,
+      chatId: data.chatId,
+      content: data.message,
+      senderId: data.senderId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      date: new Date(),
+    };
     if (user) {
       io.to(user.socketId).emit("getMessage", sendingData);
     }
@@ -98,16 +97,29 @@ io.on("connection", (socket) => {
       socket.to(sendUserSocket).emit("msg-recieved", data.message);
     }
   });
-  socket.on("typing", (data: { msg: string; recipienId: string,name:string }) => {
-    
-    const user = onlineUsersList.find(
-      (user) => user.userId == data.recipienId
+  socket.on(
+    "typing",
+    (data: { msg: string; recipienId: string; name: string; Id: string }) => {
+      const user = onlineUsersList.find(
+        (user) => user.userId == data.recipienId
       );
-      
-    
-    
-    if (user) {
-      io.to(user.socketId).emit("typing",`${data.name} is ${data.msg}`)
+
+      if (user) {
+        io.to(user.socketId).emit("typing", data);
+      }
     }
-  });
+  );
+  socket.on(
+    "stoppedTyping",
+    (data: { msg: string; recipienId: string; name: string; Id: string }) => {
+      const user = onlineUsersList.find(
+        (user) => user.userId == data.recipienId
+      );
+
+      if (user) {
+        io.to(user.socketId).emit("stoppedTyping", data);
+      }
+    }
+  );
+
 });

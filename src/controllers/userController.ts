@@ -111,11 +111,27 @@ export const checkAuthController = async (req: Request, res: Response) => {
 };
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const myId=req.query.id
+    const myId = req.query.id;
     const users = await UserModal.find({ _id: { $ne: myId } });
 
-    res.status(200).json({status:true,users})
+    res.status(200).json({ status: true, users });
   } catch (error: Error | any) {
     res.status(400).json({ status: true, err: error.message, users: false });
+  }
+};
+export const setLastSeen = async (req: Request, res: Response) => {
+  try {
+    const { userId, date } = req.body;
+    await UserModal.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          lastSeen: new Date(date),
+        },
+      }
+    );
+    res.status(200).json({status:true,message:"Successfull"})
+  } catch (error: Error | any) {
+    res.status(400).json({ status: false, err: error.message });
   }
 };
