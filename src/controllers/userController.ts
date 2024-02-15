@@ -112,7 +112,7 @@ export const checkAuthController = async (req: Request, res: Response) => {
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const myId = req.query.id;
-    const users = await UserModal.find({ _id: { $ne: myId } });
+    const users = await UserModal.find({ _id: { $ne: myId } }).sort({createdAt:-1});
 
     res.status(200).json({ status: true, users });
   } catch (error: Error | any) {

@@ -27,6 +27,7 @@ app.use(
   cors({
     credentials: true,
     origin:"https://realtime-chat-frontend-ywzp.vercel.app"
+    // origin:"http://localhost:5173"
   })
 );
 app.use("/", router);
