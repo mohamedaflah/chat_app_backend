@@ -26,8 +26,8 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin:"https://realtime-chat-frontend-ywzp.vercel.app"
-    // origin:"http://localhost:5173"
+    // origin:"https://realtime-chat-frontend-ywzp.vercel.app"
+    origin:["https://realtime-chat-frontend-ywzp.vercel.app","https://a-chat.onrender.com"]
   })
 );
 app.use("/", router);
