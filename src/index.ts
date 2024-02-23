@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    // origin:"https://realtime-chat-frontend-ywzp.vercel.app"
+    // origin:process.env.CLIENT_URL,
     origin:["https://realtime-chat-frontend-ywzp.vercel.app","https://a-chat.onrender.com"]
   })
 );
@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
         userId,
         socketId: socket.id,
       });
-    console.log(`users ${JSON.stringify(onlineUsersList)}`);
+    
 
     io.emit("getOnlineUsers", onlineUsersList);
   });
@@ -74,7 +74,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-message", (data: any) => {
-    console.log("called send", data);
     const user = onlineUsersList.find(
       (user) => user.userId === data.recipienId
     );
@@ -87,6 +86,7 @@ io.on("connection", (socket) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       date: new Date(),
+      senderName:data.senderName
     };
     if (user) {
       io.to(user.socketId).emit("getMessage", sendingData);

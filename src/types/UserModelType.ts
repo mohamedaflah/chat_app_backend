@@ -10,6 +10,7 @@ export type chatType = {
   chatId: string;
   content: string;
   senderId: string;
+  senderName:string
   createdAt: Date;
   updatedAt: Date;
   date: Date;
